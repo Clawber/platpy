@@ -1,4 +1,5 @@
 import pygame, sys
+from map_handler import *
 
 clock = pygame.time.Clock()
 
@@ -13,25 +14,13 @@ screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
 TILE_SIZE = 16
 display = pygame.Surface((300,200))
 
+#images
 player_image = pygame.image.load("images/player2.png")
 player_image.set_colorkey((255, 255, 255))
 tile1_image = pygame.image.load("images/tile.png")
 
-game_map = ["00000011100000000000",
-			"00000000000000000000",
-			"00000000000000000000",
-			"00000000000000000000",
-			"00000000000000000000",
-			"00000000000000000000",
-			"00000000000000000000",
-			"00000000000000000000",
-			"00000111100000000000",
-			"00001000000000000000",
-			"00111111100000000000",
-			"11111111111111110000",
-			"11111111111111110000"]
-for i in range(len(game_map)):
-	game_map[i] = [int(tile) for tile in game_map[i]]
+#loadind game map
+game_map = load_map("map1")
 
 def collision_test(rect, tiles):
 	hit_list = []
@@ -80,6 +69,7 @@ while True: # main game loop
 #displaying stuff
 	display.fill((146, 244, 255))
 	
+
 
 	tile_rects = []
 	for i in range(len(game_map)):
