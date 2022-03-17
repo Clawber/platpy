@@ -18,6 +18,9 @@ display = pygame.Surface((300,200))
 player_image = pygame.image.load("images/player2.png")
 player_image.set_colorkey((255, 255, 255))
 tile1_image = pygame.image.load("images/tile.png")
+tile1_image.set_colorkey((255, 255, 255))
+
+background1_image = pygame.image.load("images/background1.jpg")
 
 #loadind game map
 game_map = load_map("map1")
@@ -62,20 +65,29 @@ moving_right = False
 air_timer = 0
 player_y_momentum = 0
 
+true_scroll = [0,0]
+
 player_rect = pygame.Rect(50, 50, player_image.get_width(), player_image.get_height())
 test_rect = pygame.Rect(50,50, 100, 100)
 
 while True: # main game loop
+
 #displaying stuff
 	display.fill((146, 244, 255))
-	
 
+	true_scroll[0] += (player_rect.x-true_scroll[0]-152)/20
+	true_scroll[1] += (player_rect.y-true_scroll[1]-105)/20
 
+	scroll = [int(true_scroll[0]), int(true_scroll[1])]
+
+	display.blit(background1_image, (0 - scroll[0]/10, 0-scroll[1]/10 ))
+
+	# pygame.draw.rect(display, (7,80,75),pygame.Rect(0, 121, 300,80) )
 	tile_rects = []
 	for i in range(len(game_map)):
 		for j in range(len(game_map[0])):
 			if game_map[i][j] == 1:
-				display.blit(tile1_image, (j*TILE_SIZE, i*TILE_SIZE))
+				display.blit(tile1_image, (j*TILE_SIZE - scroll[0], i*TILE_SIZE - scroll[1]))
 			if game_map[i][j] != 0:
 				tile_rects.append(pygame.Rect(j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
@@ -104,11 +116,9 @@ while True: # main game loop
 		air_timer = 0
 	else:
 		air_timer += 1
-	
 
+	display.blit(player_image, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
 
-
-	display.blit(player_image, (player_rect.x, player_rect.y))
 
 #Checking for input
 	for event in pygame.event.get():
@@ -118,7 +128,7 @@ while True: # main game loop
 		if event.type == KEYDOWN:
 			if event.key == K_RIGHT:
 				moving_right = True
-			if event.key == K_LEFT:
+			if event.key == K_LEFT: 
 				moving_left = True
 			if event.key == K_UP:
 				if air_timer < 6:
